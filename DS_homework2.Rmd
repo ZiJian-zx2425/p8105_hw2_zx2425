@@ -1,0 +1,193 @@
+---
+title: "Simple document"
+output: github_document
+
+    
+---
+```{r,echo=FALSE, message=FALSE}
+library(tidyverse)
+library(readxl)
+library(readr)
+library(dplyr)
+```
+
+DS_problem1 
+1.1read and clean the data
+```{r}
+Transit_data=read_csv("C:/Users/10145/Desktop/DS project/p8105_hw2_zx2425/p8105_hw2_zx2425/NYC_Transit_Subway_Entrance_And_Exit_Data.csv",col_types = cols(Route8 = "c", Route9 = "c", Route10 = "c", Route11 = "c"))
+names(Transit_data)
+Transit_data=janitor::clean_names(Transit_data)
+names(Transit_data)
+tail(Transit_data)
+data_c=select(Transit_data,line,station_name,station_latitude,station_longitude,route1:route11,entry,vending,entrance_type,ada)
+
+```
+
+DS_problem1 
+1.2 Convert the entry variable's type
+```{r}
+data_c=mutate(data_c,entry=factor(entry,levels=c("YES","NO")))
+```
+
+DS_problem1 
+1.3answer the questions
+```{r}
+distincted_station=distinct(data_c,station_name, .keep_all = TRUE)
+filter_data=filter(distincted_station, ada==TRUE)
+#356 rows
+filter_data2=filter(distincted_station, vending=="NO")
+filter_data2
+```
+1.3 the answer is:
+The original data set which called Transit_data contains 32 variables. After standardizing the name of it, it including: division,line, station_name, station_latitude, station_longitude, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11, entrance_type, entry, exit_only, vending, staffing, staff_hours, ada, ada_notes, free_crossover, north_south_street, east_west_street, corner, entrance_latitude, entrance_longitude, station_location, entrance_location.
+The data set c is a cleaned dataset of original data of problem1. This data set contain 19 variables including line,station_name,station_latitude,station_longitude,route1:route11,entry,vending,entrance_type,ada.
+I have standarded the name of the variables and select target variable to form a new dataset. it is 1868*19. I think those steps are data tidy.
+
+
+```{r}
+filter_data2 %>% 
+  filter(vending == "NO") %>% 
+  pull(entry) %>% 
+  mean
+```
+
+Lastly, we write a code chunk to identify stations that serve the A train, and to assess how many of these are ADA compliant. As a first step, we tidy the data as alluded to previously; that is, we convert `route` from wide to long format. After this step, we can use tools from previous parts of the question (filtering to focus on the A train, and on ADA compliance; selecting and using `distinct` to obtain dataframes with the required stations in rows).
+
+```{r}
+filter_data2 %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") %>% 
+  filter(route == "A") %>% 
+  select(station_name, line) %>% 
+  distinct
+
+
+filter_data2 %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_num",
+    values_to = "route") %>% 
+  filter(route == "A", ada == TRUE) %>% 
+  select(station_name, line) %>% 
+  distinct
+```
+
+Problem2
+
+```{r}
+Mr_Trash_Wheel= 
+    read_excel("C:/Users/10145/Desktop/DS project/p8105_hw2_zx2425/p8105_hw2_zx2425/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",sheet = "Mr. Trash Wheel")%>% 
+  
+  ##readkkjlsadasadsadasdasd
+  
+    janitor::clean_names() %>% 
+    drop_na(dumpster) %>% 
+    mutate(
+      sports_balls = as.integer(round(sports_balls))
+      )
+```
+```{r}
+Pro_Trash_Wheel = 
+    read_excel("C:/Users/10145/Desktop/DS project/p8105_hw2_zx2425/p8105_hw2_zx2425/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",sheet = "Professor Trash Wheel") %>% 
+    janitor::clean_names() %>% 
+    drop_na(dumpster) %>% 
+    mutate(
+      dumpster=as.double(dumpster)
+    )
+```
+
+
+```{r}
+Mr_Trash_Wheel=Mr_Trash_Wheel[ , -which(colnames(Mr_Trash_Wheel) %in% c("x15","x16"))]
+Mr_Trash_Wheel= mutate(Mr_Trash_Wheel,name=as.character("Mr. Trash Wheel"))
+Pro_Trash_Wheel=mutate(Pro_Trash_Wheel,name=as.character("Professor Trash Wheel"))
+Mr_Trash_Wheel= mutate(Mr_Trash_Wheel,year=as.double(year))
+Pro_Trash_Wheel= mutate(Pro_Trash_Wheel,year=as.double(year))
+TOTAL= bind_rows(Mr_Trash_Wheel,Pro_Trash_Wheel)
+sum(Pro_Trash_Wheel$weight_tons)
+filter_Mr_Trash_Wheel=dplyr::filter(Mr_Trash_Wheel,year==2020)
+sum(filter_Mr_Trash_Wheel$sports_balls)
+
+
+```
+
+
+Problem3
+```{r}
+unemployment=read_csv("C:/Users/10145/Desktop/DS project/p8105_hw2_zx2425/p8105_hw2_zx2425/fivethirtyeight_datasets/unemployment.csv")
+pol=read_csv("C:/Users/10145/Desktop/DS project/p8105_hw2_zx2425/p8105_hw2_zx2425/fivethirtyeight_datasets/pols-month.csv")
+snp=read_csv("C:/Users/10145/Desktop/DS project/p8105_hw2_zx2425/p8105_hw2_zx2425/fivethirtyeight_datasets/snp.csv")
+```
+
+```{r}
+pol = separate(pol,mon, into= c("year","month",'day'),sep= "-")
+pol=mutate(pol,
+  month = recode(month, "01" = "January", "02" = "February", "03"="March", "04"="April","05"="May","06"="June", "07"="July", "08"="August","09"="September","10"="October","11"="November", "12"="December")
+)
+pol=mutate(pol,president=ifelse(prez_gop==1, "prez_gop",ifelse(prez_gop==0,"prez_dem","other") )
+           )
+```
+
+
+```{r}
+pol=select(pol, -day)
+pol=select(pol, -prez_gop)
+pol=select(pol, -prez_dem)
+```
+
+
+
+```{r}
+snp = separate(snp,date, into= c("month","day",'year'),sep= "/")
+snp=mutate(snp, month = recode(month, "1" = "January", "2" = "February", "3"="March", "4"="April","5"="May","6"="June", "7"="July", "8"="August","9"="September","10"="October","11"="November", "12"="December")
+)
+snp=select(snp, -day)
+snp=mutate(snp,year=as.integer(year))
+#snp=mutate(snp,month=as.integer(month))
+pol=mutate(pol,year=as.integer(year))
+#pol=mutate(pol,month=as.integer(month))
+
+data_d=pivot_longer(unemployment,Jan:Dec,names_to="month",values_to="amount")
+data_d= data_d %>%
+  janitor::clean_names()
+data_d=mutate(data_d,year=as.integer(year))
+#data_d=mutate(data_d,month=as.integer(month))
+snp=mutate(snp, year = ifelse(year<20,year + 2000,year + 1900)
+)
+snp=arrange(snp,year,month)
+snp=relocate(snp, year, month,close)
+
+```
+
+```{r}
+#pulse_tidy_data = 
+ # pivot_longer(
+   # pol, 
+   # c(prez_gop,prez_dem),
+   # names_to = "president")
+
+```
+
+```{r}
+
+#for (val in snp$year)+
+#{+
+#  if(val<20){+
+#    y=val+2000+
+#  }+
+#  else{+
+#    y=val+1900+
+#  }+
+#}
+#y
+```
+```{r}
+library(dplyr)
+data_e=left_join(pol,snp,by=c("year","month"))
+data_f=left_join(data_e,data_d,by=c("year","month"))
+
+```
+
+
