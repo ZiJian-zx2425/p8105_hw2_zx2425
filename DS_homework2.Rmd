@@ -122,8 +122,7 @@ sum(filter_Mr_Trash_Wheel$sports_balls)
 
 Explaination:
 The total weight of trash collected by Professor Trash Wheel is ```r sum(Pro_Trash_Wheel$weight_tons) ```
-The total number of sports balls collected by Mr. Trash Wheel in 2020 is ```r
-`sum(filter_Mr_Trash_Wheel$sports_balls)```
+The total number of sports balls collected by Mr. Trash Wheel in 2020 is ```r sum(filter_Mr_Trash_Wheel$sports_balls)```
 
 Problem 3
 
@@ -169,6 +168,9 @@ data_d=pivot_longer(unemployment,Jan:Dec,names_to="month",values_to="amount")
 data_d= data_d %>%
   janitor::clean_names()
 data_d=mutate(data_d,year=as.integer(year))
+data_d=mutate(data_d,
+  month = recode(month, "Jan" = "January", "Feb" = "February", "Mar"="March", "Apr"="April","May"="May","Jun"="June", "Jul"="July", "Aug"="August","Sep"="September","Oct"="October","Nov"="November", "Dec"="December")
+)
 snp=mutate(snp, year = ifelse(year<20,year + 2000,year + 1900))
 snp=arrange(snp,year,month)
 snp=relocate(snp, year, month,close)
@@ -179,7 +181,8 @@ jion them together
 library(dplyr)
 data_e=left_join(pol,snp,by=c("year","month"))
 data_f=left_join(data_e,data_d,by=c("year","month"))
-
+data_e
+data_f
 ```
 
 the content of the initial pols-month dataframe contains 9 variables, including:mon      prez_gop gov_gop sen_gop rep_gop prez_dem gov_dem sen_dem rep_dem.822 multiply 9. After processing, they become to year month gov_gop sen_gop rep_gop gov_dem sen_dem rep_dem president.822*9 The range of the year of pols_moth dataframe is 1947-2015.

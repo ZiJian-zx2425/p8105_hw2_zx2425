@@ -121,14 +121,6 @@ filter_data2 %>%
 
     ## [1] NA
 
-Lastly, we write a code chunk to identify stations that serve the A
-train, and to assess how many of these are ADA compliant. As a first
-step, we tidy the data as alluded to previously; that is, we convert
-`route` from wide to long format. After this step, we can use tools from
-previous parts of the question (filtering to focus on the A train, and
-on ADA compliance; selecting and using `distinct` to obtain dataframes
-with the required stations in rows).
-
 ``` r
 filter_data2 %>% 
   pivot_longer(
@@ -159,13 +151,13 @@ filter_data2 %>%
     ## # A tibble: 0 × 2
     ## # … with 2 variables: station_name <chr>, line <chr>
 
-At last, we need to make a code chunk to identify stations that serve
-the A train, and to assess how many of these are ADA compliant. As a
-first step, we tidy the data as alluded to previously; that is, we
-convert `route` from wide to long format. After this step, we can use
-tools from previous parts of the question (filtering to focus on the A
-train, and on ADA compliance; selecting and using `distinct` to obtain
-dataframes with the required stations in rows).
+Explaination: At last, we need to make a code chunk to identify stations
+that serve the A train, and to assess how many of these are ADA
+compliant. As a first step, we tidy the data as alluded to previously;
+that is, we convert `route` from wide to long format. After this step,
+we can use tools from previous parts of the question (filtering to focus
+on the A train, and on ADA compliance; selecting and using `distinct` to
+obtain dataframes with the required stations in rows).
 
 Problem2
 
@@ -174,9 +166,6 @@ Read and clean the dataset of Mr_Trash_Wheel, The results as following:
 ``` r
 Mr_Trash_Wheel= 
     read_excel("C:/Users/10145/Desktop/DS project/p8105_hw2_zx2425/p8105_hw2_zx2425/Trash-Wheel-Collection-Totals-7-2020-2.xlsx",sheet = "Mr. Trash Wheel")%>% 
-  
-  ##readkkjlsadasadsadasdasd
-  
     janitor::clean_names() %>% 
     drop_na(dumpster) %>% 
     mutate(
@@ -221,7 +210,26 @@ Pro_Trash_Wheel =
     mutate(
       dumpster=as.double(dumpster)
     )
+Pro_Trash_Wheel
 ```
+
+    ## # A tibble: 94 × 13
+    ##    dumpster month     year date                weight_…¹ volum…² plast…³ polys…⁴
+    ##       <dbl> <chr>    <dbl> <dttm>                  <dbl>   <dbl>   <dbl>   <dbl>
+    ##  1        1 January   2017 2017-01-02 00:00:00      1.79      15    1950    6080
+    ##  2        2 January   2017 2017-01-30 00:00:00      1.58      15    9540   11230
+    ##  3        3 February  2017 2017-02-26 00:00:00      2.32      18    8350    9210
+    ##  4        4 February  2017 2017-02-26 00:00:00      3.72      15    8590    1030
+    ##  5        5 February  2017 2017-02-28 00:00:00      1.45      15    7830    9950
+    ##  6        6 March     2017 2017-03-30 00:00:00      1.71      15    8210   10340
+    ##  7        7 April     2017 2017-04-01 00:00:00      1.82      15    9830   11020
+    ##  8        8 April     2017 2017-04-20 00:00:00      2.37      15    9240    8760
+    ##  9        9 May       2017 2017-05-10 00:00:00      2.64      15    9540    8810
+    ## 10       10 May       2017 2017-05-26 00:00:00      2.78      15    8230    7800
+    ## # … with 84 more rows, 5 more variables: cigarette_butts <dbl>,
+    ## #   glass_bottles <dbl>, grocery_bags <dbl>, chip_bags <dbl>,
+    ## #   homes_powered <dbl>, and abbreviated variable names ¹​weight_tons,
+    ## #   ²​volume_cubic_yards, ³​plastic_bottles, ⁴​polystyrene
 
 ``` r
 Mr_Trash_Wheel=Mr_Trash_Wheel[ , -which(colnames(Mr_Trash_Wheel) %in% c("x15","x16"))]
@@ -230,6 +238,9 @@ Pro_Trash_Wheel=mutate(Pro_Trash_Wheel,name=as.character("Professor Trash Wheel"
 Mr_Trash_Wheel= mutate(Mr_Trash_Wheel,year=as.double(year))
 Pro_Trash_Wheel= mutate(Pro_Trash_Wheel,year=as.double(year))
 TOTAL= bind_rows(Mr_Trash_Wheel,Pro_Trash_Wheel)
+```
+
+``` r
 sum(Pro_Trash_Wheel$weight_tons)
 ```
 
@@ -242,7 +253,13 @@ sum(filter_Mr_Trash_Wheel$sports_balls)
 
     ## [1] 856
 
-Problem3
+Explaination: The total weight of trash collected by Professor Trash
+Wheel is `190.12` The total number of sports balls collected by
+Mr. Trash Wheel in 2020 is `856`
+
+Problem 3
+
+Problem3 Read three datasets:
 
 ``` r
 unemployment=read_csv("C:/Users/10145/Desktop/DS project/p8105_hw2_zx2425/p8105_hw2_zx2425/fivethirtyeight_datasets/unemployment.csv")
@@ -282,6 +299,8 @@ snp=read_csv("C:/Users/10145/Desktop/DS project/p8105_hw2_zx2425/p8105_hw2_zx242
     ## ℹ Use `spec()` to retrieve the full column specification for this data.
     ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 
+manipulate the pols_moth dataset
+
 ``` r
 pol = separate(pol,mon, into= c("year","month",'day'),sep= "-")
 pol=mutate(pol,
@@ -291,11 +310,15 @@ pol=mutate(pol,president=ifelse(prez_gop==1, "prez_gop",ifelse(prez_gop==0,"prez
            )
 ```
 
+manipulate the pols_moth dataset
+
 ``` r
 pol=select(pol, -day)
 pol=select(pol, -prez_gop)
 pol=select(pol, -prez_dem)
 ```
+
+manipulate the snp dataset
 
 ``` r
 snp = separate(snp,date, into= c("month","day",'year'),sep= "/")
@@ -303,44 +326,43 @@ snp=mutate(snp, month = recode(month, "1" = "January", "2" = "February", "3"="Ma
 )
 snp=select(snp, -day)
 snp=mutate(snp,year=as.integer(year))
-#snp=mutate(snp,month=as.integer(month))
-pol=mutate(pol,year=as.integer(year))
-#pol=mutate(pol,month=as.integer(month))
+```
 
+translate the formate of the two datasets in order to combine them
+together:
+
+``` r
+pol=mutate(pol,year=as.integer(year))
 data_d=pivot_longer(unemployment,Jan:Dec,names_to="month",values_to="amount")
 data_d= data_d %>%
   janitor::clean_names()
 data_d=mutate(data_d,year=as.integer(year))
-#data_d=mutate(data_d,month=as.integer(month))
-snp=mutate(snp, year = ifelse(year<20,year + 2000,year + 1900)
+data_d=mutate(data_d,
+  month = recode(month, "Jan" = "January", "Feb" = "February", "Mar"="March", "Apr"="April","May"="May","Jun"="June", "Jul"="July", "Aug"="August","Sep"="September","Oct"="October","Nov"="November", "Dec"="December")
 )
+snp=mutate(snp, year = ifelse(year<20,year + 2000,year + 1900))
 snp=arrange(snp,year,month)
 snp=relocate(snp, year, month,close)
 ```
 
-``` r
-#pulse_tidy_data = 
- # pivot_longer(
-   # pol, 
-   # c(prez_gop,prez_dem),
-   # names_to = "president")
-```
-
-``` r
-#for (val in snp$year)+
-#{+
-#  if(val<20){+
-#    y=val+2000+
-#  }+
-#  else{+
-#    y=val+1900+
-#  }+
-#}
-#y
-```
+jion them together
 
 ``` r
 library(dplyr)
 data_e=left_join(pol,snp,by=c("year","month"))
 data_f=left_join(data_e,data_d,by=c("year","month"))
 ```
+
+the content of the initial pols-month dataframe contains 9 variables,
+including:mon prez_gop gov_gop sen_gop rep_gop prez_dem gov_dem sen_dem
+rep_dem.822 multiply 9. After processing, they become to year month
+gov_gop sen_gop rep_gop gov_dem sen_dem rep_dem president.822*9 The
+range of the year of pols_moth dataframe is 1947-2015. the content of
+the initial snp dataframe contains 2 variables, including:data close.
+787*2 After processing, they become to month year close.787 multiply 3.
+The range of the year of snp dataframe is 1950-2015.
+
+the content of the combined dataframe：data_f contains 11 variables,
+including:year month gov_gop sen_gop rep_gop gov_dem sen_dem rep_dem
+president close amount. 822\*11. The range of the combined dataframe
+data_f is 1947-2015.
