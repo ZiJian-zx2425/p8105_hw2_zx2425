@@ -159,7 +159,17 @@ filter_data2 %>%
     ## # A tibble: 0 × 2
     ## # … with 2 variables: station_name <chr>, line <chr>
 
+At last, we need to make a code chunk to identify stations that serve
+the A train, and to assess how many of these are ADA compliant. As a
+first step, we tidy the data as alluded to previously; that is, we
+convert `route` from wide to long format. After this step, we can use
+tools from previous parts of the question (filtering to focus on the A
+train, and on ADA compliance; selecting and using `distinct` to obtain
+dataframes with the required stations in rows).
+
 Problem2
+
+Read and clean the dataset of Mr_Trash_Wheel, The results as following:
 
 ``` r
 Mr_Trash_Wheel= 
@@ -177,6 +187,31 @@ Mr_Trash_Wheel=
     ## New names:
     ## • `` -> `...15`
     ## • `` -> `...16`
+
+``` r
+Mr_Trash_Wheel
+```
+
+    ## # A tibble: 547 × 16
+    ##    dumpster month year  date                weight_tons volume…¹ plast…² polys…³
+    ##       <dbl> <chr> <chr> <dttm>                    <dbl>    <dbl>   <dbl>   <dbl>
+    ##  1        1 May   2014  2014-05-16 00:00:00        4.31       18    1450    1820
+    ##  2        2 May   2014  2014-05-16 00:00:00        2.74       13    1120    1030
+    ##  3        3 May   2014  2014-05-16 00:00:00        3.45       15    2450    3100
+    ##  4        4 May   2014  2014-05-17 00:00:00        3.1        15    2380    2730
+    ##  5        5 May   2014  2014-05-17 00:00:00        4.06       18     980     870
+    ##  6        6 May   2014  2014-05-20 00:00:00        2.71       13    1430    2140
+    ##  7        7 May   2014  2014-05-21 00:00:00        1.91        8     910    1090
+    ##  8        8 May   2014  2014-05-28 00:00:00        3.7        16    3580    4310
+    ##  9        9 June  2014  2014-06-05 00:00:00        2.52       14    2400    2790
+    ## 10       10 June  2014  2014-06-11 00:00:00        3.76       18    1340    1730
+    ## # … with 537 more rows, 8 more variables: cigarette_butts <dbl>,
+    ## #   glass_bottles <dbl>, grocery_bags <dbl>, chip_bags <dbl>,
+    ## #   sports_balls <int>, homes_powered <dbl>, x15 <lgl>, x16 <lgl>, and
+    ## #   abbreviated variable names ¹​volume_cubic_yards, ²​plastic_bottles,
+    ## #   ³​polystyrene
+
+Read and clean the dataset of Pro_Trash_Wheel, The results as following:
 
 ``` r
 Pro_Trash_Wheel = 
